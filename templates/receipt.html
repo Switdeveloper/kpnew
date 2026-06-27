@@ -9,7 +9,7 @@
     .no-print { display: none !important; }
 }
 </style>
-<div class="receipt-box text-center" style="max-width:520px;margin:auto;background:#fff;padding:30px;border:2px solid #00d4ff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1)">
+<div class="receipt-box text-center" style="max-width:520px;margin:auto;background:#fff;padding:330px;border:2px solid #00d4ff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.1)">
     <div style="border-bottom:2px solid #00d4ff;padding-bottom:10px;margin-bottom:15px">
         <h3 style="margin:0;color:#1a1a2e">🏫 KWARA STATE POLYTECHNIC</h3>
         <p style="margin:5px 0 0;color:#666;font-size:.9rem">Official Payment Receipt</p>
@@ -32,8 +32,7 @@
     <hr style="margin:20px 0">
 
     <p style="margin:0 0 10px;color:#666;font-size:.85rem"><strong>📱 Scan QR to verify on any device</strong></p>
-    <img src="data:image/png;base64,{{ qr_b64 }}" alt="QR Code"
-         style="width:220px;height:220px;border:1px solid #ddd;padding:10px;border-radius:8px">
+    <div id="qrcode" style="width:220px;height:220px;margin:0 auto;border:1px solid #ddd;padding:10px;border-radius:8px;"></div>
 
     <p style="margin:15px 0 5px;color:#666;font-size:.75rem">Or visit this link:</p>
     <code style="font-size:.7rem;color:#00d4ff;word-break:break-all;display:block;padding:5px;background:#f4f6f9;border-radius:4px">
@@ -51,4 +50,16 @@
     <a href="https://wa.me/?text={{ ('Payment Receipt %s | %s | ₦%s'.format(r.receipt_no, r.fullname, '{:,.0f}'.format(r.amount_paid))) | urlencode }}%20{{ verify_url | urlencode }}" class="btn btn-success" target="_blank">📤 Share on WhatsApp</a>
     <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">← Back</a>
 </div>
+
+<script>
+    const verifyUrl = "{{ verify_url | escapejs }}";
+    new QRCode(document.getElementById("qrcode"), {
+        text: verifyUrl,
+        width: 220,
+        height: 220,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+    });
+</script>
 {% endblock %}
