@@ -1,0 +1,15 @@
+{
+  "name": "Kwara State Polytechnic - School Fees",
+  "short_name": "Kwarapoly Fees",
+  "start_url": "login.html",
+  "display": "standalone",
+  "background_color": "#030",
+  "theme_color": "#339933",
+  "icons": [
+    {
+      "src": "kwarapoly-logo.png",
+      "sizes": "140x140",
+      "type": "image/png"
+    }
+  ]
+}
