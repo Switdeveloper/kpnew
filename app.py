@@ -236,28 +236,29 @@ def public_verify(receipt_no):
 @app.route('/verify', methods=['GET', 'POST'])
 def verify_page():
     result = None
+    receipt_id = ''
     if request.method == 'POST':
         receipt_id = request.form.get('receipt_id', '').strip()
-        if receipt_id:
-            # Direct lookup by receipt ID
-            conn = get_db()
-            p = conn.execute("""
-                SELECT p.*, s.fullname, s.matric, s.department, s.level, f.fee_type
+    elif request.method == 'GET':
+        receipt_id = request.args.get('receipt_id', '').strip()
+    if receipt_id:
+        # Direct lookup by receipt ID
+        conn = get_db()
+        p = conn.execute("""SELECT p.*, s.fullname, s.matric, s.department, s.level, f.fee_type
                 FROM payments p
                 JOIN students s ON p.student_id=s.id
                 JOIN fees f ON p.fee_id=f.id
-                WHERE p.receipt_no=?
-            """, (receipt_id,)).fetchone()
-            conn.close()
-            if p:
-                result = {'valid': True, 'receipt_no': p['receipt_no'],
-                          'student_name': p['fullname'], 'matric': p['matric'],
-                          'department': p['department'], 'level': p['level'],
-                          'fee_type': p['fee_type'],
-                          'amount': f"₦{p['amount_paid']:,.0f}",
-                          'date': p['payment_date'], 'verified': bool(p['verified'])}
-            else:
-                result = {'valid': False, 'message': f'❌ Receipt "{receipt_id}" not found in our records. Please check the ID and try again.'}
+                WHERE p.receipt_no=?""", (receipt_id,)).fetchone()
+        conn.close()
+        if p:
+            result = {'valid': True, 'receipt_no': p['receipt_no'],
+                      'student_name': p['fullname'], 'matric': p['matric'],
+                      'department': p['department'], 'level': p['level'],
+                      'fee_type': p['fee_type'],
+                      'amount': f"₦{p['amount_paid']:,.0f}",
+                      'date': p['payment_date'], 'verified': bool(p['verified'])}
+        else:
+            result = {'valid': False, 'message': f'❌ Receipt "{receipt_id}" not found in our records. Please check the ID and try again.'}
     return render_template('verify.html', result=result)
 
 @app.route('/verify_qr_image', methods=['POST'])
